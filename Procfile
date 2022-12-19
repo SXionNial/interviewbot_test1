@@ -1,1 +1,1 @@
-web: gunicorn InterviewBot.wsgi --log-file -
+web: gunicorn InterviewBot.wsgi:application --log-file -
