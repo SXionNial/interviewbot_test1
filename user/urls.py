@@ -49,6 +49,6 @@ urlpatterns=[
     path('job-interview/interview-forfeited', login_required(views.InterviewForfeitView.as_view()), name="interview_forfeit_view"),
     
     # todelete
-    path('create-sadmin', views.AdminRegistrationSecretView.as_view(), name="create_sadmin")
+    path('create-sadmin/', views.AdminRegistrationSecretView.as_view(), name="create_admin_view")
     
 ]
