@@ -1,0 +1,650 @@
+{% load static %}
+
+
+{% block headerinclude %}
+
+    <title>Interview BOT - Account Settings</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/administrator/adminsettings.css' %}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
+
+{% endblock headerinclude %}
+
+
+
+{% block footerinclude %}
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js" integrity="sha512-6ORWJX/LrnSjBzwefdNUyLCMTIsGoNP6NftMy2UAm1JBm6PRZCO1d7OHBStWpVFZLO+RerTvqX/Z9mBFfCJZ4A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- SweetAlert JS -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+{% endblock footerinclude %}
+
+
+{% block content %}
+<body onload="setDefault();">
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/logo.gif' %}" width="100%">
+            </div>
+            <center>
+                <button type="button" id="id-btnCreateJob" class="jobCreate" data-toggle="modal" data-target="#modalCreate" class="btn btn-warning">Create Job</button>
+            </center>
+            <br>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="{% url 'administrator:dashboard_view' %}">
+                        <i class="fas fa-table"></i>
+                        &nbsp;&nbsp;Dashboard
+                    </a>
+                </li>
+                <li >
+                    <a href="{% url 'administrator:job-lists_view' %}">
+                        <i class="fas fa-search"></i>
+                        &nbsp;&nbsp;Job List
+                    </a>
+                </li>
+                <li>
+                    <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-user-circle"></i>&nbsp;&nbsp; {{user.email}}</a>
+                    <ul class="list-unstyled" id="settings">
+                        <li class="active">
+                            <a href="{% url 'administrator:settings_view' %}"><i class="fas fa-cog"></i>&nbsp;&nbsp; Settings</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'administrator:logout_view' %}"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp; Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <hr style="border-top: 3px solid #fdcc01;">
+            <br>
+            <div class="row">
+                <div class="addStaff">
+                    <a href="{% url 'administrator:create-staff_view' %}"><i class="fas fa-user-plus"></i> &nbsp; Add Staff Account</a>
+                </div>
+                <br>
+                {% if user.admin %}
+                <div class="addAdmin">
+                    <a href="{% url 'administrator:create-admin_view' %}"><i class="fas fa-user-plus"></i> &nbsp; Add Admin Account</a>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+
+        <!-- Page Content  -->
+
+        <div id="content">
+            <h1>Settings<hr></h1>
+
+            <form id="update-form" name="update-form" action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% comment %} <!-- <div class="row align-items-center">
+                    <div class="col-md-5 mr-4">
+                           
+                            <div class="form-group text-left mt-5">
+                                <p class="w-responsive mx-auto mb-2 text-warning">Profile Information</p>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" id="firstname" name="firstname" class="form-control" placeholder="First Name" value="{{user.firstname}}">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Last Name" value="{{user.lastname}}">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="number" id="phone" name="phone" class="form-control" placeholder="Phone Number" value="{{user.phone}}" step="0" oninput="limit_input();">
+
+                                <!-- Set phone maxlength to 11 -->
+                                <script type="text/javascript">
+                                    function limit_input() {
+                                        var field = document.getElementById("phone");
+                                        var max_length = 11;
+                                        if (field.value.length > max_length) {
+                                            field.value = field.value.slice(0, max_length); 
+                                        }
+                                    }
+                                </script>
+                            </div>
+                    </div>
+
+                    <div class="col-md-5 ml-4">
+
+                        <div class="form-group text-left ">
+                            <p class="w-responsive mx-auto mb-2 text-warning">Account Information</p>
+                        </div>
+                            
+                        <div class="form-group">
+                            <input disabled type="text" id="email" name="email" class="form-control" placeholder="Email Address" value="{{user.email}}">
+                        </div>
+
+                            <div class="form-group">
+                                <input type="password" 
+                                id="password" name="password" 
+                                class="form-control" 
+                                placeholder="Password" 
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}"
+                                title="Must contain at least one number and one uppercase and lowercase letter
+                                &#10and at least 6 not greater than 20 characters.">
+                                
+                                <div id="toggle" onclick="showHide()">  
+                                    <script type="text/javascript">
+
+                                        const password = document.getElementById('password');
+                                        const toggle = document.getElementById('toggle');
+
+                                        function showHide(){
+                                            if(password.type==='password'){
+                                                password.setAttribute('type', 'text');
+                                                toggle.classList.add('hide')
+                                            }else{
+                                                password.setAttribute('type', 'password');
+                                                toggle.classList.remove('hide')
+                                            }
+                                        }
+                                    </script>   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center mt-5">
+                        <div class="text-center text-md-left">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="submit" id="update" name="btnUpdate" class="btn btn-warning font-weight-bold text-dark" style="margin-top: -50px;">UPDATE</button>
+
+                            <script>
+                                document.getElementById("update").addEventListener("click", function(event){
+                                    if (document.getElementById("phone").value.length != 11){
+                                        alert("Please input a valid phone number.")
+                                        event.preventDefault()
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div> --> {% endcomment %}
+                <div id="informations" style = "margin-top: 5px;">
+                
+                    <div class="col-md-5 mr-5" style = "margin-right: 250px;">
+                        <div class="form-group text-left mt-1">
+                            <p class="w-responsive mx-auto font-weight-bold mt-4 text-dark" style="font-size: 25px;"><i class="fas fa-user-circle"></i> Profile Information</p>
+                        </div>
+
+                        <input type="text" name="applicant-id" value = {{user.id}} hidden>
+
+                        <div class="form-group"style ="padding-right: 25px;">
+                            <input type="text" id="firstname" name="firstname" class="form-control" placeholder="First Name" value="{{user.firstname}}">
+                        </div>
+
+                        <div class="form-group" style ="padding-right: 25px;">
+                            <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Last Name" value="{{user.lastname}}">
+                        </div>
+
+                        <div class="form-group" style ="padding-right: 25px;">
+                            <input type="number" id="phone" name="phone" class="form-control" placeholder="Phone Number" oninput="limit_input();" value="{{user.phone}}">
+
+                            <!-- Set phone maxlength to 11 -->
+                            <script type="text/javascript">
+                                function limit_input() {
+                                    var field = document.getElementById("phone");
+                                    var max_length = 11;
+                                    if (field.value.length > max_length) {
+                                        field.value = field.value.slice(0, max_length); 
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 mr-5" style = "margin-top: 5px; margin-right: 200px;">
+                
+                        <div class="form-group text-left mt-1" >
+                            <p class="w-responsive mx-auto font-weight-bold mt-4 text-dark" style="font-size: 25px;"> <i class="fas fa-envelope"></i> Account Information</p>
+                        </div>
+                        
+                        <div class="form-group" style ="padding-right: 25px;" >
+                            <input disabled type="text" id="email" name="email" class="form-control" placeholder="Email Address" value="{{user.email}}">
+                        </div>
+    
+                        <div class="form-group" style ="padding-right: 25px;">
+                            <input type="password" 
+                            id="password" name="password" 
+                            class="form-control" 
+                            placeholder="Password" 
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}"
+                            title="Must contain at least one number and one uppercase and lowercase letter
+                            &#10and at least 6 not greater than 20 characters.">
+    
+                            <div id="toggle" onclick="showHide()" style="margin-top: 5px">  
+                                <script type="text/javascript">
+    
+                                    const password = document.getElementById('password');
+                                    const toggle = document.getElementById('toggle');
+    
+                                    function showHide(){
+                                        if(password.type==='password'){
+                                            password.setAttribute('type', 'text');
+                                            toggle.classList.add('hide')
+                                        }else{
+                                            password.setAttribute('type', 'password');
+                                            toggle.classList.remove('hide')
+                                        }
+                                    }
+                                </script>   
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center mt-5">
+                        <div class="text-center text-md-left">
+                            {% comment %} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {% endcomment %}
+                            <button type="submit" id="update" name="update" class="btn btn-warning font-weight-bold" style="margin-top: -30px;">UPDATE</button>
+    
+                            <script>
+                                document.getElementById("update").addEventListener("click", function(event){
+                                    if (document.getElementById("phone").value.length != 11){
+                                        alert("Please input a valid phone number.")
+                                        event.preventDefault()
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div> <!-- end div for id=informations -->
+
+            </form>
+
+        </div>
+            
+    </div>
+
+    <!-- CREATE JOB MODAL -->
+    <div id="createJobModal" class="jobCreateModal">
+        <div class="createJob-content">
+            <span class="close">&times</span>
+            <form id="post_question" method="POST" action="" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="containerColor">
+                    <div class="modalHeader">
+                        <img src="{% static 'images/Notepad.png' %}" class="imgNotepad">
+                        <a class="questionTitle">Create Job Offering</a>
+                        <img src="{% static 'images/citLogo.png' %}" class="imgProfile">
+                        <a href="#"><img src="{% static 'images/ellipsis.png' %}" class="imgEllipsis"></a>
+                        <button type="submit" class="btnPost" name="btnAdd" id="btnAdd">Post</button>
+                    </div>
+                    <div class="container">
+                        <div class="tab-pane active"><center>
+                            <div class="questionnaireTitle">
+                                <input type="text" name="name-title" id="id-title" style="border-color: #ccc; outline: none;" placeholder="Job Title" required>
+                                <textarea type="text" name="name-description" id="id-description" rows="5" cols="50" maxlength="500" style="margin-top: 5px; border: none; outline: none;" placeholder="Job description" required></textarea>
+                            </div>
+                            <div class="questionContainer">
+                                <input type="checkbox" id="defaultQ" name="defaultQ" value="defaultQ"  onchange="checkBox();" checked>
+                                <label for="defaultQ">Use Default Questions 1 to 10</label>
+                                <p class="note">Note: You are required to input all the question fields.</p>
+
+                                <script type="text/javascript"> //Script to show and hide div
+                                    function setDefault(){
+                                        $('.ownQ1').hide();
+                                        $('.ownQ6').hide();
+                                    }
+
+                                    function checkBox(){
+                                        let q1 = document.querySelector('#id-question1');
+                                        let q2 = document.querySelector('#id-question2');
+                                        let q3 = document.querySelector('#id-question3');
+                                        let q4 = document.querySelector('#id-question4');
+                                        let q5 = document.querySelector('#id-question5');
+                                        let q6 = document.querySelector('#id-question6');
+                                        let q7 = document.querySelector('#id-question7');
+                                        let q8 = document.querySelector('#id-question8');
+                                        let q9 = document.querySelector('#id-question9');
+                                        let q10 = document.querySelector('#id-question10');
+
+                                        if ($('#defaultQ').is(":checked")){
+                                            $('.ownQ1').hide();
+                                            $('.ownQ6').hide();
+                                            $('.defQ1').show();
+                                            $('.defQ6').show();
+                                            q1.removeAttribute('required');
+                                            q2.removeAttribute('required');
+                                            q3.removeAttribute('required');
+                                            q4.removeAttribute('required');
+                                            q5.removeAttribute('required');
+                                            q6.removeAttribute('required');
+                                            q7.removeAttribute('required');
+                                            q8.removeAttribute('required');
+                                            q9.removeAttribute('required');
+                                            q10.removeAttribute('required');
+                                        }
+                                        else{
+                                            $('.ownQ1').show();
+                                            $('.ownQ6').show();
+                                            $('.defQ1').hide();
+                                            $('.defQ6').hide();
+                                            q1.setAttribute('required', '')
+                                            q2.setAttribute('required', '')
+                                            q3.setAttribute('required', '')
+                                            q4.setAttribute('required', '')
+                                            q5.setAttribute('required', '')
+                                            q6.setAttribute('required', '')
+                                            q7.setAttribute('required', '')
+                                            q8.setAttribute('required', '')
+                                            q9.setAttribute('required', '')
+                                            q10.setAttribute('required', '')
+                                        }
+                                    }
+                                </script>
+
+                                <div class="tabs" style="width: 80%; border-left: 5px solid #933633; border-radius: 10px 10px 0 0;">
+                                    <a class="tablink" onclick="numberQuestion(event, 'fiveQuest')" id="defaultQuestionOpen">Questions 1 - 5</a>
+                                    <a class="tablink" onclick="numberQuestion(event, 'tenQuest')">Questions 6 - 10</a>
+                                    <a class="tablink" onclick="numberQuestion(event, 'fifteenQuest')">Questions 11 - 15</a>
+                                    <a class="tablink" onclick="numberQuestion(event, 'twentyQuest')">Questions 16 - 20</a>
+                                </div>
+                                <div class="contentQuestion">
+                                    <div class="input_fields_wrap2">
+                                        <div id="fiveQuest" class="tabcontents">
+                                            <div class="defQ1"> <!-- DEFAULT QUESTIONS FOT QUESTIONS 1 TO 5 (QUESTIONS NOT EDITABLE)-->
+                                                <span class="text-dark" style="float: right; font-size: 14px; font-weight: bolder;">You can edit the timer and weight for each question.</span><br>
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight1" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer1" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn1" value="Please tell me about yourself." title="Question 1" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight2" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer2" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn2" value="What does team spirit mean to you and how would you go about building it?" title="Question 2" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight3" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer3" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn3" value="Your project fails miserably. How do you deal with it?" title="Question 3" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight4" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer4" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn4" value="How do you go about rearranging your schedule if something unplanned occurs?" title="Question 4" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight5" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer5" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn5" value="What can you do for us that other candidates cannot?" title="Question 5" readonly>
+                                            </div>
+
+                                            <div class="ownQ1"> <!-- OWN QUESTIONS FOR QUESTION 1 TO 5 (QUESTIONS ARE EDITABLE)-->
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight1" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer1" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn1" id="id-question1" placeholder="Question 1*">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight2" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer2" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn2" id="id-question2" placeholder="Question 2*">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight3" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer3" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn3" id="id-question3" placeholder="Question 3*">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight4" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer4" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn4" id="id-question4" placeholder="Question 4*">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight5" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer5" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn5" id="id-question5" placeholder="Question 5*">
+                                            </div>
+                                        </div>
+
+                                        <div id="tenQuest" class="tabcontents">
+                                            <div class="defQ6"> <!-- DEFAULT QUESTIONS FOR QUESTIONS 6 TO 10 (QUESTIONS NOT EDITABLE)-->
+                                                <span class="text-dark" style="float: right; font-size: 14px; font-weight: bolder;">You can edit the timer and weight for each question.</span><br>
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight6" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer6" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn6" value="Describe a situation where results went against expectations. How did you adapt to this change?" title="Question 6" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight7" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer7" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn7" value="What are the key ingredients to building good relationships with others?" title="Question 7" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight8" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer8" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn8" value="Tell me about a time when you’ve struggled to meet deadlines. What did you do?" title="Question 8" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight9" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer9" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn9" value="What would you do if you discovered a manager was breaking company rules?" title="Question 9" readonly>
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-d-weight10" value="1" title="Weight" required>
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-d-timer10" value="2" title="Timer in minutes" required>
+                                                <input type="text" name="create-d-qtn10" value="What steps do you take to gain a customer’s trust?" title="Question 10" readonly>
+                                            </div>
+
+                                            <div class="ownQ6"> <!-- OWN QUESTIONS FOR QUESTION 6 TO 10 (QUESTIONS ARE EDITABLE) -->
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight6" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer6" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn6" id="id-question6" placeholder="Question 6*" title="Question 6">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight7" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer7" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn7" id="id-question7" placeholder="Question 7*" title="Question 7">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight8" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer8" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn8" id="id-question8" placeholder="Question 8*" title="Question 8">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight9" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer9" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn9" id="id-question9" placeholder="Question 9*" title="Question 9">
+
+                                                <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                                <input type="number" min="1" max="5" name="create-o-weight10" value="1" title="Weight">
+                                                <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                                <input type="number" min="2" max="5" name="create-o-timer10" value="2" title="Timer in minutes">
+                                                <input type="text" name="create-o-qtn10" id="id-question10" placeholder="Question 10*" title="Question 10">
+                                            </div>
+                                        </div>
+
+                                        <div id="fifteenQuest" class="tabcontents">
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight11" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer11" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn11" id="id-question11" placeholder="Question 11*" title="Question 11" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight12" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer12" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn12" id="id-question12" placeholder="Question 12*" title="Question 12" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight13" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer13" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn13" id="id-question13" placeholder="Question 13*" title="Question 13" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight14" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer14" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn14" id="id-question14" placeholder="Question 14*" title="Question 14" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight15" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer15" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn15" id="id-question15" placeholder="Question 15*" title="Question 15" required>
+                                        </div>
+
+                                        <div id="twentyQuest" class="tabcontents">
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight16" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer16" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn16" id="id-question16" placeholder="Question 16*" title="Question 16" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight17" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer17" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn17" id="id-question17" placeholder="Question 17*" title="Question 17" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight18" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer18" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn18" id="id-question18" placeholder="Question 18*" title="Question 18" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight19" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer19" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn19" id="id-question19" placeholder="Question 19*" title="Question 19" required>
+
+                                            <label><i class="fas fa-balance-scale"></i> Weight &nbsp;</label>
+                                            <input type="number" min="1" max="5" name="create-o-weight20" value="1" title="Weight" required>
+                                            <label><i class="fas fa-clock"></i> Timer &nbsp;</label>
+                                            <input type="number" min="2" max="5" name="create-o-timer20" value="2" title="Timer in minutes" required>
+                                            <input type="text" name="create-o-qtn20" id="id-question20" placeholder="Question 20*" title="Question 20" required>
+                                        </div>
+                                    </div>
+                                </div><br><br style="line-height: 10px;">
+                            </div></center>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div> <!-- END OF CREATE MODAL -->
+
+    <script> // SCRIPT FOR ALERT MESSAGES USING SWEET ALERT JS 
+    {% for message in messages %}
+        swal(
+            "Success", // title
+            "You have updated your information!",  // text content
+            "success", // icon
+            {
+                buttons: false, // remove the buttons
+                timer: 2000, // set timer to disapper modal
+            }
+        );
+    {% endfor %}
+    </script>
+
+    <!-- script for Create Job Modal -->
+    <script type="text/javascript">
+        var modal = document.getElementById("createJobModal");
+        var btn = document.getElementById("id-btnCreateJob");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function(){
+            modal.style.display = "block";
+        }
+        span.onclick = function(){
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <!-- MODAL EXIT WHEN PRESSED ESCAPE -->
+    <script type="text/javascript">
+        $(document).keydown(function(event) { 
+            if (event.keyCode == 27) { 
+                $('#createJobModal').hide();
+            }
+        });
+    </script>
+
+    <!-- SHOW QUESTION BUTTONS -->
+    <script type="text/javascript">
+        function numberQuestion(evt, number) {
+          // Declare all variables
+          var i, tabcontent, tablinks;
+
+          // Get all elements with class="tabcontent" and hide them
+          tabcontent = document.getElementsByClassName("tabcontents");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+
+          // Get all elements with class="tablinks" and remove the class "active"
+          tablinks = document.getElementsByClassName("tablink");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+
+          // Show the current tab, and add an "active" class to the button that opened the tab
+          document.getElementById(number).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+
+        document.getElementById("defaultQuestionOpen").click();
+    </script>
+</body>
+{% endblock content %}

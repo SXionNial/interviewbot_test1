@@ -1,0 +1,168 @@
+{% load static %}
+
+{% block headerinclude %}
+    
+    <title>Interview BOT - Job Offers Interview</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/user/JobOffer_Interview.css' %}">
+    
+{% endblock headerinclude %}
+
+
+{% block footerinclude %}
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js" integrity="sha512-6ORWJX/LrnSjBzwefdNUyLCMTIsGoNP6NftMy2UAm1JBm6PRZCO1d7OHBStWpVFZLO+RerTvqX/Z9mBFfCJZ4A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- ResponsiveVoice API -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=N9DRhuUu"></script>
+    <!-- Font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+{% endblock footerinclude %}
+
+
+
+{% block content %}
+
+  <div class="chat">
+    {% comment %} <div class="banner">
+      <img src="{% static 'images/instructions_banner.png'%}" alt="..." class="banner-img">
+    </div> {% endcomment %}
+    <div class="chat-title">
+      {% for job in job %}
+      <b><h1>{{job.title}}</h1></b>
+      <h2>{{job.description}}</h2>
+      {% endfor %}
+      <figure class="avatar">
+        <img src="{% static 'images/citLogo.png' %}" />
+      </figure>
+    </div><br>
+
+    <script>
+      function onEnd(text) {
+        document.getElementById("btnProceed").hidden=false;
+        document.getElementById("btnCancel").hidden=false;
+      } 
+      responsiveVoice.speak("Please take time to read the instruction. Be aware of the Dos and Don'ts when answering the interview questions. Best of luck!", "US English Female", {volume: 0, "onend": function() { onEnd();} });
+
+      // Prevent users from pressing F5
+      document.onkeydown = disableF5;   
+      function disableF5(e) { if ((e.keyCode) == 116) e.preventDefault(); };
+    </script>
+
+    <div class="messages">
+      <div class="messages-content">
+        <h5>Instruction: <b>You can only view the questions once. Your responses will be submitted automatically once the timer expires. At this moment, please DO NOT refresh the page. If you wish not to continue this virtual interview, you can click the CANCEL button.</b></h5><br>
+        <h5 style="color: red; text-align: justify;margin-left: 3%;width: 95%; padding: 5px;">
+          <p>Note: Speech-to-Text will <b>ONLY</b> work on the following supported browsers:&nbsp;<b style="color: black;">Chrome, Edge, Safari and Samsung Internet.</b></p></h5><br>
+        <h5>Here are the list of <i><b>Dos</b></i> and <i><b>Don'ts</b></i> when answering the virtual interview session. </h5><br style="line-height: 10px;">
+        
+        <br><br>
+
+        <div style="position: relative; padding-top: 5%; margin-bottom: 10%; float: left;">
+          <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+            <source src="{% static 'videos/interview_instructions.mp4' %}" type="video/mp4" >
+          </video>
+          
+          
+          {% comment %} <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+            <source src="{{STATIC_URL}}/{{'videos/interview_instructions.mp4'}}" type="video/mp4" >
+          </video> {% endcomment %}
+          {% comment %} <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+            <source src="{% url 'https://drive.google.com/file/d/1jcNuJzPLbu7xH69Tohw0qikbX1pfsWVi/view?usp=sharing' %}" type="video/mp4" >
+          </video>
+          <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+            <source src="https://youtu.be/8Deiq8wvknQ" type="video/mp4" >
+          </video>
+          <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+            <source src="{{MEDIA_URL}}videos/question2.mp4" type="video/mp4" >
+          </video>
+          <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+            <source src="{{MEDIA_URL}}/{{'videos/question2.mp4'}}" type="video/mp4" >
+          </video> {% endcomment %}
+        </div>
+
+        <video autoplay width="320" height="240" controls>
+          <source src="interview_instructions.mp4' ">
+        </video>
+
+        <video autoplay width="320" height="240" controls>
+          <source src="/interview_instructions.mp4' ">
+        </video>
+
+        <video autoplay width="320" height="240" controls>
+          <source src="/interview_instructions.mp4' ">
+        </video>
+
+        <video autoplay width="320" height="240" controls>
+          <source src="../interview_instructions.mp4' ">
+        </video>
+
+        <video autoplay width="320" height="240" controls>
+          <source src="../static/interview_instructions.mp4' ">
+        </video>
+
+
+        <video autoplay style="position: absolute; width: 90%; height: 90%; top: 0; left: 0; border: none; padding-left: 100px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+          <source src="{% static 'interview_instructions.mp4' %}" type=" video/mp4" >
+        </video>
+
+        <video autoplay style="position: absolute; width: 90%; height: 90%; top: 0; left: 0; border: none; padding-left: 100px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+          <source src="{% static '/interview_instructions.mp4' %}" type="video/mp4" >
+        </video>
+
+        
+        
+
+        <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+          <source src="{% static 'interview_instructions.mp4' %}" type="video/mp4" >
+        </video>
+
+        <video autoplay style="position: absolute; height: 476px; top: 0; left: 0; border: none; padding-left: 95px; margin: 0; overflow:hidden;" allow="accelerometer; autoplay; clipboard-write; encrypted-media;">
+          <source src="{% static '../static/interview_instructions.mp4' %}" type="video/mp4" >
+        </video>
+        
+
+    
+        <div class="row" style="float: right; padding-left: 1150px;">
+          <div class="do" style="margin-left: 0%; padding-right: 98px;">
+            <header><strong><center>&emsp;&emsp;&emsp;&emsp;&emsp;Dos</center></strong></header><br>
+            <ul id="do">
+              <li> Answer the interview questions in chronological order.</li>
+              <li> Answer within the time limit.</li>
+              <li> Answer either encoding or speaking your responses.</li>
+              <li> Answer at your own best.</li>
+            </ul>
+          </div>
+          <div class="dont">
+            <header><strong><center>Don'ts</center></strong></header><br>
+            <ul id="dont">
+              <li> Browsing other pages of this site while having an interview session </li>
+              <li> Refreshing the page results in forfeiting the job interview.</li>
+              <li> Submitting your responses after the time limit has passed.</li>
+              <li> Submitting your responses while the microphone is in use.</li>
+              <li> Using the question reader and microphone simultaneously.</li>
+              <li> Take interview sessions simultaneously.</li>
+            </ul>
+          </div>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <form method="POST">
+          {% csrf_token %}
+          <center>
+            <button class="btn btn-warning" id="btnProceed" name="btnProceed" hidden>PROCEED</button>
+            <button class="btn btn-secondary" id="btnCancel" name="btnCancel" hidden>CANCEL</button>
+          </center>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

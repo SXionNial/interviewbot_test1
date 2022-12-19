@@ -1,0 +1,169 @@
+{% load static %}
+
+
+{% block headerinclude %}
+
+    <title>Interview BOT - About Us</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/user/about_us.css' %}">
+
+{% endblock headerinclude %}
+
+
+{% block footerinclude %}
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js" integrity="sha512-6ORWJX/LrnSjBzwefdNUyLCMTIsGoNP6NftMy2UAm1JBm6PRZCO1d7OHBStWpVFZLO+RerTvqX/Z9mBFfCJZ4A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+{% endblock footerinclude %}
+
+
+
+{% block content %}
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="{% static 'images/logo.gif' %}" width="100%">
+            </div>
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="{% url 'user:home_view' %}">
+                        <i class="fas fa-home"></i>
+                        &nbsp;&nbsp;Home
+                    </a>
+                </li>
+                <li >
+                    <a href="{% url 'user:job-offers_view' %}">
+                        <i class="fas fa-search"></i>
+                        &nbsp;&nbsp;Job Offers
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{% url 'user:about-us_view' %}">
+                        <i class="fas fa-info-circle"></i>
+                        &nbsp;&nbsp;About Us
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'user:contact-us_view' %}">
+                        <i class="fas fa-envelope"></i>
+                        &nbsp;&nbsp;Contact Us
+                    </a>
+                </li>
+                <li>
+                    <a href="#settings" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-user-circle"></i>&nbsp;&nbsp; {{user.email}}</a>
+                    <ul class="collapse list-unstyled" id="settings">
+                        <li>
+                            <a href="{% url 'user:settings_view' %}"><i class="fas fa-cog"></i>&nbsp;&nbsp; Settings</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'user:logout_view' %}"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp; Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+
+        <!-- Page Content  -->
+
+        <div id="content">
+
+            <h1>About Us<hr></h1><br>
+            <p class="text-light" style="margin-left: 2%;"> Interviewerbot 2.0 is a project developed by the 4th year student of Cebu Institute of Technology University, School Year 2022-2023 and this is a partial requirement of their Capstone Subject. Interviewerbot is first developed by the previous Information Technology researcher of S.Y. 2021-2022 of CIT-U and with the collaborative effort and approval of their group, they gave us the full consent to continue this study and add some features that would enhance the project.</p>
+            <br>
+    
+            <h3 class="h1-responsive font-weight-bold mt-3 mb-5 text-warning">&nbsp;Meet Our Team</h3>
+            <div class="row ml-3 mb-5">
+                <div class="col-sm-3 card" style="margin: 10px; text-align: center; color: white">
+                    <div class="member">
+                        <img src="{% static 'images/1.png' %}" style="border: #fdcc01 solid 2px; border-radius: 50% " height="100px;">
+                        <p><br>Roberto M. Ladres</p>
+                        <div class="pra" style="text-align: justify">
+                            <p>A fourth year aspiring student Developer from Buenavista, Bohol. Who is currently studying in Cebu Institute of technology in a program of BS Information Technology.</p>
+        
+                            <p style="text-align: center;">
+                                <a class="button" href="#">Read More</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-3 card" style="margin: 10px; text-align: center; color: white">
+                    <div class="member1">
+                        <img src="{% static 'images/2.png' %}" style="border: #fdcc01 solid 2px; border-radius: 50%" height="100px;">
+                        <p><br>Nino John J. Almasa</p>
+                        <div class="pra" style="text-align: justify">
+                            <p>A fourth year BSIT student of Cebu Institute of Technology - University and currently residing in Dumanjug, Cebu. Fascinated in uncovering the mysteries of the world.</p>
+        
+                            <p style="text-align: center;">
+                                <a class="button" href="https://almasa.carrd.co/" target="_blank">Read More</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3 card" style="margin: 10px; text-align: center; color: white">
+                    <div class="member">
+                        <img src="{% static 'images/3.png' %}" style="border: #fdcc01 solid 2px; border-radius: 50%" height="100px;">
+                        <p><br>Geross E. Rosales</p>
+                        <div class="pra" style="text-align: justify">
+                            <p>A 4th year BSIT student, currently studying at Cebu Institute Technology - University from Talisay City, Cebu. I love to code and create different websites.</p>
+        
+                            <p style="text-align: center;">
+                                <a class="button" href="#">Read More</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row ml-3 mb-5 box">
+                <div class="col-sm-3 card" style="margin: 10px; text-align: center; color: white">
+                    <div class="member">
+                        <img src="{% static 'images/4.png' %}" style="border: #fdcc01 solid 2px; border-radius: 50%" height="100px;">
+                        <p><br>Joneil R. Siao</p>
+                        <div class="pra" style="text-align: justify">
+                            <p>A 4th year student in Cebu Institute of Technology University taking the course of BSIT from Dumanjug Cebu, that like to read manhua and playing video games.</p>
+        
+                            <p style="text-align: center;">
+                                <a class="button" href="#">Read More</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3 card" style="margin: 10px; text-align: center; color: white">
+                    <div class="member">
+                        <img src="{% static 'images/5.png' %}" style="border: #fdcc01 solid 2px; border-radius: 50%" height="100px;">
+                        <p><br>Angelina T. Singson</p>
+                        <div class="pra" style="text-align: justify">
+					<p>Currently a fourth year BSIT student at a well known university in Cebu. Born in Dasmarinas Cavite on July 5, 1999 and currently living in the province of Cebu.</p>
+
+					<p style="text-align: center;">
+						<a class="button" href="#">Read More</a>
+					</p>
+				</div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

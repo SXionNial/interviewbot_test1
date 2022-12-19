@@ -1,0 +1,181 @@
+{% load static %}
+
+{% block headerinclude %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Login to Interview BOT</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- JQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/user/userLog-inPage.css' %}">
+    
+{% endblock headerinclude %}
+
+
+
+{% block footerinclude %}
+    <!-- Font Awesome JS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+{% endblock footerinclude %}
+
+
+
+{% block content %}
+
+<div class="float-login-main">
+    <div class="float-login1">
+      <div class="login_logo">
+        <div class="login_logo_content">
+            <!-- <div class="slideshow-container"> -->
+                <br>
+
+                    <div class="mySlides fade">
+                      <!-- <div class="numbertext">1 / 3</div> -->
+                      <img src="static/images/slide1.png" alt="..." class="login_logo_img">
+                      <div class="text">Caption Text</div>
+                    </div>
+                    
+                    <div class="mySlides fade">
+                      <!-- <div class="numbertext">2 / 3</div> -->
+                      <img src="static/images/slide2.png" alt="..." class="login_logo_img">
+                      <div class="text">Caption Two</div>
+                    </div>
+                    
+                    <div class="mySlides fade">
+                      <!-- <div class="numbertext">3 / 3</div> -->
+                      <img src="static/images/slide3.png" alt="..." class="login_logo_img">
+                      <div class="text">Caption Three</div>
+                    </div>
+
+                    <div class="mySlides fade">
+                      <!-- <div class="numbertext">3 / 3</div> -->
+                      <img src="static/images/slide4.png" alt="..." class="login_logo_img">
+                      <div class="text">Caption Three</div>
+                    </div>
+                    
+                    
+                    <br>
+                    
+                    <div style="text-align:center">
+                      <span class="dot"></span> 
+                      <span class="dot"></span> 
+                      <span class="dot"></span> 
+                      <span class="dot"></span> 
+                    </div>
+                    
+                    <script>
+                    let slideIndex = 0;
+                    showSlides();
+                    
+                    function showSlides() {
+                      let i;
+                      let slides = document.getElementsByClassName("mySlides");
+                      let dots = document.getElementsByClassName("dot");
+                      for (i = 0; i < slides.length; i++) {
+                        slides[i].style.display = "none";  
+                      }
+                      slideIndex++;
+                      if (slideIndex > slides.length) {slideIndex = 1}    
+                      for (i = 0; i < dots.length; i++) {
+                        dots[i].className = dots[i].className.replace(" active", "");
+                      }
+                      slides[slideIndex-1].style.display = "block";  
+                      dots[slideIndex-1].className += " active";
+                      setTimeout(showSlides, 2000); // Change image every 2 seconds
+                    }
+                    </script>
+      
+          <!-- <img src="static/images/login-logo.png" alt="..." class="login_logo_img"> -->
+          <div class="login_logo_content_a"> <br>Interviewer Bot 2.0 :<br>
+            An Online Interview Platform <br>
+            with Instant Scoring System.</div>
+         </div>
+      </div>
+    </div>
+    <div class="float-login2">
+        <div class="login">
+            <div class="logo">
+              <center>  <img  src="{% static 'images/logo_white.gif' %}" width="60%" height="30%"></center>
+             </div>
+    
+            {% if user.is_authenticated and not user.staff %} 
+            <!-- if user is authenticated and not a staff/admin, redirect to user homepage -->
+                <script>
+                    function redirect(){
+                       window.location.href = "/user/home/";
+                    }
+                    setTimeout(redirect, 0); //1000 is equivalent to 1 second
+                </script>
+            {% elif user.is_authenticated and user.staff %}
+            <!-- if user is authenticated and is a staff/admin, redirect to administrator dashboard -->
+                <script>
+                    function redirect(){
+                       window.location.href = "/administrator/dashboard/";
+                    }
+                    setTimeout(redirect, 0); //1000 is equivalent to 1 second
+                </script>
+            {% else %}       
+            <center> <form id="login" method="POST" action="" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+    
+                <div class="py-3">
+                    <hr style="width: 50%";text-align:center;>
+                </div>
+    
+                <div class="form-group">
+                    {{form.email}}
+                </div>
+    
+                <div class="form-group">
+                    {{form.password}}
+                </div>
+    
+                {% for message in messages %}
+                    <div {% if 'error' in message.tags %} class="error_message alert alert-danger" {% else %} class="error_message alert alert-{{message.tags}}" {% endif %} role="alert" style="font-size: 13px; width: 50%;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+    
+                <script>
+                    $('#login input[type="email"]').on("input", function(){
+                        $('.error_message').hide();
+                    });
+    
+                    $('#login input[type="password"]').on("input", function() {
+                      $(".error_message").hide();
+                    });
+                </script>
+    
+                 <div class="pb-3">
+                    <hr style="width: 50% ;text-align:center;">
+                </div>
+    
+                <a href="{% url 'password_reset' %}" style="color: black;">Forgot password?</a><br><br>
+    
+                <div class="form-group">
+                    <button class="btn_login" name="login" id="id-login">LOG IN</button>
+                </div>
+    
+                <div class="form-group">
+                        <a href="{% url 'user:registration_view' %}" class="btn_signUp" type="button" name="signUp" id="id-signUp">SIGN UP</a>
+                </div>
+            </form> </center>
+            {% endif %}
+    </div>     
+    
+  </div>
+  <div class="footer">
+  </div>
+
+
+ 
+{% endblock content %}        

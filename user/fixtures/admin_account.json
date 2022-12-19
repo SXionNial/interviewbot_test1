@@ -1,0 +1,17 @@
+[
+	{
+		"model": "user.Account",
+		"pk": 1000,
+		"fields": {
+			"email": "johann.straus.005@gmail.com",
+			"is_active": "1",
+			"staff": "1",
+			"admin": "1",
+			"firstname": "LA",
+			"lastname": "RRS",
+			"phone": "09112223333",
+			"password": "Pass@1234",
+			"gender": "Male"
+		}		
+	}
+]

@@ -1,0 +1,87 @@
+{% load static %}
+
+
+{% block headerinclude %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Interview BOT - Registration</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    
+    <!-- JQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/administrator/adminregistration.css' %}">
+
+{% endblock headerinclude %}
+
+
+{% block content %}
+
+    <div class="register" style="text-align: center">
+        <div class="logo">
+        <center>
+        <img src="{% static 'images/logo.png' %}" width="40%" height="23%">
+        </center>
+        </div>           
+         <form id="register" method="POST" action="" autocomplete="off" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h3>REGISTRATION | <b>STAFF</b></h3>
+            <div class="py-3">
+                <hr style="width: 50%; text-align:center;">
+            </div>
+
+            <div class="form-group">
+                {{form.firstname}}
+                {{form.lastname}}
+            </div>
+
+            <div class="form-group">
+                {{form.phone}}
+                {{form.gender}}
+            </div>
+            {% for message in messages %}
+                {% if message.tags == 'warning' %}
+                <div class="error_message alert" role="alert" style="margin-top: -3%; margin-bottom: -2%; margin-left: 13%; font-size: 14px; width: 50%; color: red;">
+                    {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="form-group">   
+                {{form.email}}
+            </div>
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="error_message alert" role="alert" style="margin-top: -3%; margin-bottom: -1%; margin-left: 20%; font-size: 14px; width: 50%; color: red;">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="pb-2">                
+                {{form.password}}
+            </div>
+
+            <div class="pb-2">                
+                {{form.password_2}}
+            </div>
+
+            <div class="py-3">
+                <hr style="width: 50%; text-align:center;">
+            </div>
+
+            <div>
+                <button type="submit" id="btnRegister" class="btn_register" name="register">REGISTER</button><br><br>
+                <a href="{% url 'administrator:dashboard_view' %}" class="btn_cancel">CANCEL</a>
+            </div>
+        </form>
+    </div>
+    
+    <script src="{% static 'js/error_message.js' %}"></script>
+    <script src="{% static 'js/registration_validation.js' %}"></script>
+
+{% endblock content %}

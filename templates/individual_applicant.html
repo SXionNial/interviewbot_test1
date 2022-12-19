@@ -1,0 +1,266 @@
+{% load static %}
+
+
+{% block headerinclude %}
+    
+    <title>Interview BOT - Job Responses</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/administrator/jobapplicants.css' %}">
+
+{% endblock headerinclude %}
+
+
+
+{% block footerinclude %}
+    
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js" integrity="sha512-6ORWJX/LrnSjBzwefdNUyLCMTIsGoNP6NftMy2UAm1JBm6PRZCO1d7OHBStWpVFZLO+RerTvqX/Z9mBFfCJZ4A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+
+{% endblock footerinclude %}
+
+
+{% block content %}
+    <div class="containerColor" style="border-radius: 0%;min-height: 100%;width: 100%;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <div class="modalHeader" style="border-radius: 0px;height: 80px;">
+            <img src="{% static 'images/Notepad.png' %}" class="imgNotepad">
+            {% for job in job %}
+            <a class="questionTitle">{{job.title}} - Responses</a><br><br>
+            {% endfor %}
+            <a href=  "{% url 'administrator:applicants_view' %}"><b>Back</b></a>
+        </div>
+                    
+        {% for response in responses %}
+        <div id="questionsTab" class="tab-pane in active" style="margin-top: 2%;">
+            <center>
+            <div class="questionnaireTitle" style="height: 100px;">
+                <h2><b>{{response.firstname}} {{response.lastname}}</b></h2>
+            </div>
+
+            <div class="questionContainer">
+                <div class="contentQuestion">
+                    <section id="tabs" class="project-tab">
+                        <div class="container" style="width: 150%; margin-left: -10%;">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <nav>
+                                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                            <a class="nav-item nav-link active" id="summary-tab" data-toggle="tab" href="#summary-{{response.job_id}}" role="tab"aria-selected="true" aria-disabled="true">Summary</a>
+                                            <a class="nav-item nav-link" id="q1to5-tab" data-toggle="tab" href="#q1to5-{{response.job_id}}" role="tab" aria-selected="false" aria-disabled="false">Questions 1-5</a>
+                                            <a class="nav-item nav-link" id="q6to10-tab" data-toggle="tab" href="#q6to10-{{response.job_id}}" role="tab" aria-selected="false">Questions 6-10</a>
+                                            <a class="nav-item nav-link" id="q11to15-tab" data-toggle="tab" href="#q11to15-{{response.job_id}}" role="tab" aria-selected="false">Questions 11-15</a>
+                                            <a class="nav-item nav-link" id="q16to20-tab" data-toggle="tab" href="#q16to20-{{response.job_id}}" role="tab" aria-selected="false">Questions 16-20</a>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <center>
+                    <div class="tab-content" id="nav-tabContents">
+                        <div class="tab-pane fade show active" id="summary-{{response.job_id}}" role="tabpanel" aria-labelledby="summary-tab" style="width: 87%; margin-top: -5%;">
+                            <h6 style="color: red;"> Note: Each question has its weight. The initial score are multiplied by its weight. </h6>
+                            <h5>Overall Score based on Sentiment Analysis</h5>
+                            <h3>{{response.final_score}}%</h3><br>
+                            <h5 style="float: left;">Summary of Scores per Question</h5>
+                            <canvas id="myChart"></canvas>
+                            <script>
+                                let myChart = document.getElementById('myChart').getContext('2d');
+
+                                // Global Options
+                                Chart.defaults.global.defaultFontFamily = 'GothamLight';
+                                Chart.defaults.global.defaultFontSize = 18;
+                                Chart.defaults.global.defaultFontColor = '#000';
+
+                                let massPopChart = new Chart(myChart, {
+                                  type:'horizontalBar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                                  data:{
+                                    labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20'],
+                                    datasets:[{
+                                      label:'Score',
+                                      data: [
+                                            Number.parseFloat({{response.score1}}).toFixed(2), 
+                                            Number.parseFloat({{response.score2}}).toFixed(2), 
+                                            Number.parseFloat({{response.score3}}).toFixed(2),
+                                            Number.parseFloat({{response.score4}}).toFixed(2), 
+                                            Number.parseFloat({{response.score5}}).toFixed(2),
+                                            Number.parseFloat({{response.score6}}).toFixed(2),
+                                            Number.parseFloat({{response.score7}}).toFixed(2),
+                                            Number.parseFloat({{response.score8}}).toFixed(2),
+                                            Number.parseFloat({{response.score9}}).toFixed(2), 
+                                            Number.parseFloat({{response.score10}}).toFixed(2),
+                                            Number.parseFloat({{response.score11}}).toFixed(2),
+                                            Number.parseFloat({{response.score12}}).toFixed(2), 
+                                            Number.parseFloat({{response.score13}}).toFixed(2),
+                                            Number.parseFloat({{response.score14}}).toFixed(2),
+                                            Number.parseFloat({{response.score15}}).toFixed(2),
+                                            Number.parseFloat({{response.score16}}).toFixed(2),
+                                            Number.parseFloat({{response.score17}}).toFixed(2),
+                                            Number.parseFloat({{response.score18}}).toFixed(2),
+                                            Number.parseFloat({{response.score19}}).toFixed(2),
+                                            Number.parseFloat({{response.score20}}).toFixed(2)
+                                            ],
+                                      backgroundColor: 'rgba(178,34,34,0.8)',
+                                      borderWidth:1,
+                                      borderColor:'#777',
+                                      hoverBorderWidth:3,
+                                      hoverBorderColor:'#FFF'
+                                    }]
+                                  },
+                                  options:{
+                                    scales: {
+                                        xAxes: [{
+                                            display: true,
+                                            ticks: {
+                                                beginAtZero: true,
+                                                max: 500
+                                            }
+                                        }]
+                                    },
+                                    legend:{
+                                      display:true,
+                                      position:'right',
+                                      labels:{
+                                        fontColor:'#000'
+                                      }
+                                    },
+                                    layout:{
+                                      padding:{
+                                        left:50,
+                                        right:0,
+                                        bottom:0,
+                                        top:0
+                                      }
+                                    },
+                                    tooltips:{
+                                      enabled:true
+                                    }
+                                  }
+                                });
+                            </script>
+                        </div>
+                        <div class="tab-pane fade" id="q1to5-{{response.job_id}}" role="tabpanel" aria-labelledby="q1to5-tab" style="width: 87%; margin-top: -5%;">
+                            <p class="question">1. {{response.question_1}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_1}}&nbsp;</p><br>
+                            <p class="question">2. {{response.question_2}} &nbsp;</p><hr>
+                            <p class="answer">:{{response.response_2}}&nbsp;</p><br>
+                            <p class="question">3. {{response.question_3}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_3}}&nbsp;</p><br>
+                            <p class="question">4. {{response.question_4}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_4}}&nbsp;</p><br>
+                            <p class="question">5. {{response.question_5}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_5}}&nbsp;</p><br>
+                        </div>
+
+                         <div class="tab-pane fade" id="q6to10-{{response.job_id}}" role="tabpanel" aria-labelledby="q6to10-tab" style="width: 87%; margin-top: -5%;">
+                            <p class="question">6. {{response.question_6}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_6}}&nbsp;</p><br>
+                            <p class="question">7. {{response.question_7}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_7}}&nbsp;</p><br>
+                            <p class="question">8. {{response.question_8}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_8}}&nbsp;</p><br>
+                            <p class="question">9. {{response.question_9}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_9}}&nbsp;</p><br>
+                            <p class="question">10. {{response.question_10}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_10}}&nbsp;</p><br>
+                        </div>
+
+                        <div class="tab-pane fade" id="q11to15-{{response.job_id}}" role="tabpanel" aria-labelledby="q11to15-tab" style="width: 87%; margin-top: -5%;">
+                            <p class="question">11. {{response.question_11}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_11}}&nbsp;</p><br>
+                            <p class="question">12. {{response.question_12}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_12}}&nbsp;</p><br>
+                            <p class="question">13. {{response.question_13}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_13}}&nbsp;</p><br>
+                            <p class="question">14. {{response.question_14}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_14}}&nbsp;</p><br>
+                            <p class="question">15. {{response.question_15}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_15}}&nbsp;</p><br>
+                        </div>
+
+                        <div class="tab-pane fade" id="q16to20-{{response.job_id}}" role="tabpanel" aria-labelledby="q16to20-tab" style="width: 87%; margin-top: -5%;">
+                            <p class="question">16. {{response.question_16}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_16}}&nbsp;</p><br>
+                            <p class="question">17. {{response.question_17}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_17}}&nbsp;</p><br>
+                            <p class="question">18. {{response.question_18}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_18}}&nbsp;</p><br>
+                            <p class="question">19. {{response.question_19}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_19}}&nbsp;</p><br>
+                            <p class="question">20. {{response.question_20}} &nbsp;</p><hr>
+                            <p class="answer">{{response.response_20}}&nbsp;</p><br>
+                        </div>
+                    </div>
+                    </center>
+                </div>
+            </div><br><br>
+        </div>
+    </div></center> 
+    {% endfor %}                  
+
+  <!-- SHOW QUESTION BUTTONS -->
+    <script type="text/javascript">
+        function numberQuestion(evt, number) {
+          // Declare all variables
+          var i, tabcontent, tablinks;
+
+          // Get all elements with class="tabcontent" and hide them
+          tabcontent = document.getElementsByClassName("tabcontents");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+
+          // Get all elements with class="tablinks" and remove the class "active"
+          tablinks = document.getElementsByClassName("tablink");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+
+          // Show the current tab, and add an "active" class to the button that opened the tab
+          document.getElementById(number).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+
+        document.getElementById("defaultQuestionOpen").click();
+    </script>                    
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

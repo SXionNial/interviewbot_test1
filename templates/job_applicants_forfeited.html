@@ -1,0 +1,137 @@
+{% load static %}
+
+
+{% block headerinclude %}
+    
+    <title>Interview BOT - Job List</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/administrator/jobapplicants.css' %}">
+
+{% endblock headerinclude %}
+
+
+
+{% block footerinclude %}
+    
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js" integrity="sha512-6ORWJX/LrnSjBzwefdNUyLCMTIsGoNP6NftMy2UAm1JBm6PRZCO1d7OHBStWpVFZLO+RerTvqX/Z9mBFfCJZ4A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+{% endblock footerinclude %}
+
+
+
+{% block content %}
+    
+    <div class="containerColor" style="border-radius: 0%;min-height: 100%;width: 100%;">
+        <div class="modalHeader" style="border-radius: 0px;height: 80px;">
+            <img src="{% static 'images/Notepad.png' %}" class="imgNotepad">
+            <a class="questionTitle">{{joblist.title}}</a><br><br>
+            <a href=  "{% url 'administrator:dashboard_view' %}" class="back" title="Back to Dashboard"><b><i class="fas fa-chevron-circle-left"></i> Dashboard</b></a>
+            <a href=  "{% url 'administrator:job-lists_view' %}" class="back" title="Back to Job Lists"><b><i class="fas fa-chevron-circle-left"></i> Job Lists</b></a>
+            <a href=  "{% url 'administrator:applicants_view' %}" class="back" title="To Completed Applicants"><b><i class="fas fa-chevron-circle-left"></i> Applicants who Completed the Job Interview </b></a>
+        </div><br><br style="line-height: 10px;">
+    
+
+        <div class="container">
+            <div class="tab-content" style="width: 150%;margin-left: -25%;" >
+                <center><header></header>
+                <div class="questionnaireTitle" style="height: 100px;">
+                    <h2><b>List of Applicants who are Forfeited</b></h2>
+                    <h5>(Last Name, First Name)</h5>
+                </div>
+
+                <div class="questionContainer">
+                    <!-- SHOW THIS IF THERE IS AT LEAST ONE APPLICANT -->
+                    <div id="applicantList" class="contentQuestion" hidden>
+                        <center><p style="border-style: dotted; width: 40%;" class="text-info">&nbsp; Applicants are sorted from highest to lowest scorers &nbsp;</p></center>
+                        <span style="float: left; font-weight: bolder; margin-left: 6.5%;">Score</span><br style="line-height: 1px;">
+                        {% for applicant in applicants %}
+                            {% if applicant.final_score is not None %}
+                                <div class="input_fields_wrap2" style="display:flex ;margin-bottom: 10px; width: 87%;margin-top: 3%;">
+                                    <span id="final_score">{{applicant.final_score}}%</span>
+                                    <input type="text" placeholder="{{applicant.lastname}}, {{applicant.firstname}} " disabled>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <!-- SHOW THIS IF THERE IS NO APPLICANT -->
+                    <!-- <div id="noApplicant" class="contentQuestion">
+                        <br><br>
+                        <h2 id="noApplicant">This job offer does not have any applicants.</h2>
+                        <br><br>
+                    </div> -->
+
+                    {% for ff in forfeited %}
+                    <div id="applicantList" class="contentQuestion">    
+                        <div class="input_fields_wrap2" style="display:flex ;margin-bottom: 10px; width: 87%;margin-top: 3%;">
+                            <table style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>EMAIL</th>
+                                        <th>FIRSTNAME</th>
+                                        <th>LASTNAME</th>
+                                    </tr>
+                                </thead>
+                                <br><br><br>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" placeholder="{{ ff.user.email }}" disabled></td>
+                                        <td><input type="text" placeholder="{{ ff.user.firstname }}" disabled></td>
+                                        <td><input type="text" placeholder="{{ ff.user.lastname }}" disabled></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- <span id="final_score">{{applicant.final_score}}%</span> -->
+                            {% comment %} <input type="text" placeholder="{{ ff.user.email }}" disabled>
+                            <input type="text" placeholder="{{ ff.user.firstname }}" disabled>
+                            <input type="text" placeholder="{{ ff.user.lastname }}" disabled> {% endcomment %}
+                            <!-- <button type="button" class="citButton" data-toggle="modal" id="id-btnView" data-target="#viewModal-{{applicant.id}}">View</button> -->
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+                <footer></footer>
+                </center>
+
+                <footer></footer>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

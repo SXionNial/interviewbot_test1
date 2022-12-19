@@ -1,0 +1,320 @@
+{% load static %}
+
+
+{% block headerinclude %}
+
+    <title>Interview BOT</title>
+    <link href="{% static 'css/FileSubmission.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href=" {% static 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css' %}" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Manrope' rel='stylesheet'>
+    <link href="{% static 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' %}" rel="stylesheet" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'https://use.fontawesome.com/releases/v5.5.0/css/all.css' %}" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'https://use.fontawesome.com/releases/v5.5.0/css/all.css' %}" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css' %}">
+    
+
+{% endblock headerinclude %}
+
+
+{% block footerinclude %}
+
+    <script src="{% static 'js/filedrag.js' %}"></script>
+    
+{% endblock footerinclude %}
+
+
+
+{% block content %}
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      var maxField = 25; 
+      
+      // FOR WORK
+      var addWork = $('.add_work'); 
+      var wrapperWork = $('.work_wrapper'); 
+      var fieldWork = `
+        <div>
+          <br>
+          <input type="text" name="title[]" placeholder="Title" required/>
+          <br><input type="text" name="companyAdd[]" placeholder="Company Address" required/> 
+          <br><input type="text" name="work_year[]" id="work_year[]" placeholder="Year" required/>
+          <br><textarea type="text" name="work_achievements[]" id="work_achievements[]" placeholder="Achievements (If you have)"></textarea>
+          <br><a href="javascript:void(0);" class="remove_work">Delete Work</a>
+        </div>`; 
+      var x = 0;
+      $(addWork ).click(function(){
+          if(x < maxField){ 
+              x++;
+              $(wrapperWork).append(fieldWork); 
+          }
+      });
+      $(wrapperWork).on('click', '.remove_work', function(e){
+          e.preventDefault();
+          $(this).parent('div').remove(); 
+          x--; 
+      });
+      //FOR EDUCATION
+      var addEducation = $('.add_education'); 
+      var wrapperEducation = $('.education_wrapper'); 
+      var fieldEducation = `
+        <div>
+          <br>
+          <input type="text" name="education[]" id="education[]" placeholder="Education" required/>
+          <br><input type="text" name="educ_year[]" id="educ_year[]" placeholder="Year" required/>
+          <br><input type="text" name="course[]" id="course[]" placeholder="Course Taken" />
+          <br><textarea type="text" name="educ_achievements[]" id="educ_achievements[]" placeholder="Achievements (If you have)"></textarea>
+          <br><a href="javascript:void(0);" class="remove_education">Delete Education</a>
+        </div>`; 
+      var x = 0;
+      $(addEducation).click(function(){
+          if(x < maxField){ 
+              x++;
+              $(wrapperEducation).append(fieldEducation); 
+          }
+      });
+      $(wrapperEducation).on('click', '.remove_education', function(e){
+          e.preventDefault();
+          $(this).parent('div').remove(); 
+          x--; 
+      });
+      //FOR SKILLS
+      var addSkills = $('.add_skills'); 
+      var wrapperSkills = $('.skills_wrapper'); 
+      var fieldSkills = `
+        <div>
+          <br>
+          <input type="text" name="skills[]" id="skills[]" placeholder="Skill" required/>
+          <br><a href="javascript:void(0);" class="remove_skills">Delete Skills</a>
+        </div>`; 
+      var x = 0;
+      $(addSkills).click(function(){
+          if(x < maxField){ 
+              x++;
+              $(wrapperSkills).append(fieldSkills); 
+          }
+      });
+      $(wrapperSkills).on('click', '.remove_skills', function(e){
+          e.preventDefault();
+          $(this).parent('div').remove(); 
+          x--; 
+      });
+
+     
+  });
+  </script>
+
+    <div class="banner">
+      <img src="{% static 'images/file_submission_banner.png'%}" alt="..." class="banner-img">
+    </div>
+
+    <div class="container-main">
+      <div class="title">
+        <h1 style="margin-top: 8px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Resume
+          <hr size="6" width="95%" color=#9e0606>
+        </h1>
+      </div>
+      {% for f in files %}
+      <div class="content">
+        <div class="testbox">
+          <div id="resume_form">
+            {% csrf_token %}
+            <div class="banner">
+              <h1>Personal Data Sheet</h1>
+            </div>
+            <!-- <div class="item">
+              <label for="user_id">User<span>*</span></label>
+              <input type="hidden" name="userid" value = "{{prod.user}}">
+            </div>
+
+            <div class="item">
+              <label for="file">File<span>*</span></label>
+              <input type="file" name="file_upload" class="form-control">
+            </div> -->
+
+            <div class="item">
+              <label for="phone">Phone<span>*</span></label>
+              <input id="phone" type="number" value="{{ f.phone }}"  name="phone" 
+                style="margin-left: 58px;" disabled/>
+            </div>
+
+            <div class="item">
+              <label for="email">Email Address<span>*</span></label>
+              <input id="email" type="email" name="email" style="margin-left: 4px; " value="{{ f.email }}"required disabled/>
+            </div>
+            <div class="item">
+              <label for="address">Address<span>*</span></label>
+              <input id="address" type="text" name="address"  style="margin-left: 45px;" value="{{ f.address }}"required disabled/>
+            </div>
+            <div class="item">
+              <label for="position">Job Objective<span>*</span></label>
+              <input id="job_objective" type="text"  name="job_objective" value="{{ f.job_objective }}"required disabled/>
+            </div>
+            <div class="item">
+              <label for="work_experience">Work Experience<span>*</span></label>
+              <br><br>
+              <!-- <textarea id="work_experience" type="text" name="work_experience"  style="margin-left: 118px; width: 59%" rows = "4" cols = "50" required></textarea> -->
+              <div class="work_wrapper" >
+                {% for w in work %}
+                <div>
+                    <input type="text" name="title[]" id="title[]" value="{{ w.title }}" required disabled/><br>
+                    <input type="text" name="companyAdd[]" id="companyAdd[]" value="{{ w.companyAdd }}" required disabled/>
+                    <input type="text" name="work_year[]" id="work_year[]" value="{{ w.work_year }}" required disabled/>
+                    <textarea type="text" name="work_achievements[]" id="work_achievements[]" value="" disabled>{{ w.work_achievements }}</textarea>
+                    {% comment %} <br><a href="javascript:void(0);" class="add_work" title="Add field">Add Work</a> {% endcomment %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="item">
+              <label for="education">Educational Attainment<span>*</span></label>
+              <br><br>
+              <!-- <textarea id="education" type="text" name="education"  style="margin-left: 118px; width: 59%" rows = "4" cols = "50" ></textarea> -->
+              <div class="education_wrapper" >
+                {% for e in educ %}
+                <div>
+                    <input type="text" name="education[]" id="education[]" value="{{ e.education }}" required disabled/><br>
+                    <input type="text" name="educ_year[]" id="educ_year[]" value="{{ e.educ_year }}" required disabled/>
+                    <input type="text" name="course[]" id="course[]" value="{{ e.course_taken }}" disabled/>
+                    <textarea type="text" name="educ_achievements[]" id="educ_achievements[]" placeholder="Achievements (If you have)" disabled>{{ e.educ_achievements }}</textarea>
+                    {% comment %} <br><a href="javascript:void(0);" class="add_education" title="Add field">Add Education</a> {% endcomment %}
+                </div>
+                {% endfor %}
+              </div>
+              <br>
+            </div>
+            <div class="item">
+              <label for="skills">Skills<span>*</span></label>
+              <br>
+              <div class="skills_wrapper" >
+                {% for s in skills %}
+                <div>
+                    <input type="text" name="skills[]" id="skills[]" value="{{ s.skills }}" required disabled/>
+                    {% comment %} <br><a href="javascript:void(0);" class="add_skills" title="Add field">Add Skill</a> {% endcomment %}
+                </div>
+                {% endfor %}
+              </div>
+              <br>
+            </div>
+
+            <div class="item">
+                <label for="bdate">Date<span>*</span></label>  
+                &emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
+                <input id="bdate" class="datepicker"  type="date" name="bdate" value="{{ f.bdate }}" disabled/>
+                {% comment %} <button style="height: 40px; width: 40px;" id="datepicker"><i class="fa fa-calendar"></i></button> {% endcomment %}
+            </div>
+            <div class="btn-block">
+              <button name="btnFile" type="submit" onclick="printFunction()">Print</button>
+            </div>
+          <!-- </form> -->
+        </div>
+      </div>
+    </div>
+    <div class="container-main2">
+      <div class="title">
+        <h1 style="margin-top: 8px;">&nbsp&nbsp File Submission
+          <hr size="6" width="95%" color=#9e0606>
+        </h1>
+      </div>
+
+      <!-- <div id="messages">
+        <p>Status Messages</p>
+      </div> -->
+
+      <!-- <form method="POST"  enctype="multipart/form-data" id="applicationID">
+        {% csrf_token %} -->
+        <div class="testbox2" style="margin-left: 40px; margin-right: 40px; margin-bottom: 10px;">
+          <fieldset>
+            <legend>Application Letter</legend>
+
+            <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+              <div>
+                <label for="fileselect">Uploaded File: </label>
+                <input type="hidden" name="userid" value = "{{prod.user}}">&nbsp
+                <!-- <input type="file" id="fileselect" name="file_upload" multiple="multiple" /> -->
+                <button ><a href="{{ f.file_upload.url }}" style="text-decoration: none;">Click to view</a></button>
+                <div id="filedrag">or drop files here</div>
+                <div id="submitbutton">
+                </div>
+              </div>
+              <div id="submitbutton">
+                <!-- <button name="btnAppLetter" type="submit" href="/">Upload Files</button> -->
+              <br>
+              <div class="btn-block">
+                <button><a href="{% url 'administrator:applicants_view' %}" name="btnProceed" style="text-decoration: none;">Back</a></button>
+              </div>
+
+              </div>
+            
+          </fieldset>
+        </div>
+        {% endfor %}
+        <!-- <div id="messages">
+          <p>Status Messages</p>
+        </div>  -->
+  
+        
+
+      </div>
+
+      
+
+    </div>
+
+    <div class="footer" style="height: 60px;">
+    </div>
+
+    <script>
+
+      //for print/saving to pdf
+      function printFunction() {
+        var divContents = document.getElementById("resume_form").innerHTML;
+        var prnt = window.open('', '', 'height=600, width=900');
+        prnt .document.write(divContents);
+        prnt .document.close();
+        prnt .print();
+      }
+
+
+      //for adding inputboxes (trial)
+      function addEduc(type) {
+        //Create an input type dynamically.
+        var element = document.createElement("input");
+      
+        //Assign different attributes to the element.
+        element.setAttribute("type", type);
+        element.setAttribute("value", type);
+        element.setAttribute("name", type);
+      
+        var addInput = document.getElementById("addEducHere");
+      
+        //Append the element in page (in span).
+        addInput.appendChild(element);
+      }
+
+      function addSkill(type) {
+        //Create an input type dynamically.
+        var element = document.createElement("input");
+      
+        //Assign different attributes to the element.
+        element.setAttribute("type", type);
+        element.setAttribute("value", type);
+        element.setAttribute("name", type);
+      
+        var addInput = document.getElementById("addSkillHere");
+      
+        //Append the element in page (in span).
+        addInput.appendChild(element);
+      }
+
+     
+    </script>
+
+
+
+
+{% endblock content %}
