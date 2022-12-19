@@ -522,7 +522,7 @@ class AdminRegistrationView(CreateView):
         mail_subject = 'Activate your administrator account.'
         message = render_to_string('account_activation/administrator/spAcc_active_email.txt', {
             'user': user,
-            'domain': current_site.domain,
+            'domain': "https://interviewbot-t2.herokuapp.com/",
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
             'type': 'administrator',

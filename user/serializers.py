@@ -31,7 +31,7 @@ class AccountRegisterSerializer(serializers.ModelSerializer):
         mail_subject = 'Activate your account.'
         message = render_to_string('account_activation/user/acc_active_email.html', {
             'user': newUser,
-            'domain': "127.0.0.1:8000",
+            'domain': "https://interviewbot-t2.herokuapp.com/",
             'uid':urlsafe_base64_encode(force_bytes(newUser.pk)),
             'token':account_activation_token.make_token(newUser),
         })

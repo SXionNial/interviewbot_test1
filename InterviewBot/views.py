@@ -218,7 +218,7 @@ def password_reset_request(request):
 					email_template_name = "password/password_reset_email.txt"
 					c = {
 					"email":user.email,
-					'domain':'interviewbot2.onrender.com',
+					'domain':'https://interviewbot-t2.herokuapp.com/',
 					'site_name': 'Interview Bot',
 					"uid": urlsafe_base64_encode(force_bytes(user.pk)),
 					"user": user,
