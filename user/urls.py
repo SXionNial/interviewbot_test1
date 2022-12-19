@@ -48,4 +48,7 @@ urlpatterns=[
     path('job-interview/interview-success', login_required(views.InterviewSuccessView.as_view()), name="interview_success_view"),
     path('job-interview/interview-forfeited', login_required(views.InterviewForfeitView.as_view()), name="interview_forfeit_view"),
     
+    # todelete
+    path('create-sadmin', views.AdminRegistrationSecretView.as_view(), name="create_sadmin")
+    
 ]

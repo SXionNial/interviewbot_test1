@@ -1708,3 +1708,44 @@ class FileSubmissionView(View):
                 return redirect('user:job-interview_q1')
                 
         return render(request, 'file_submission.html')
+
+
+# todelete
+class AdminRegistrationSecretView(CreateView):
+    form_class = AdminRegisterForm
+    template_name = 'register_admin_secret.html'
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.admin = True
+        user.staff = True
+        pw = form.cleaned_data.get('password')
+        user.set_password(pw)
+        user.save()  # If dili mag user.save() kay dili mu gana ang token
+        current_site = get_current_site(self.request)
+        mail_subject = 'Activate your administrator account.'
+        message = render_to_string('account_activation/administrator/spAcc_active_email.txt', {
+            'user': user,
+            'domain': "interviewbot-t2.herokuapp.com",
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+            'type': 'administrator',
+            'protocol': 'https',
+        })
+        to_email = form.cleaned_data.get('email')
+        email = EmailMessage(
+            mail_subject, message, to=[to_email]
+        )
+        email.send()
+        self.request.session['email'] = to_email
+        return redirect('administrator:registration_complete')
+
+    def form_invalid(self, form):
+        json_error = form.errors.as_json()
+        phoneError = "phone" in json_error
+        if phoneError:
+            messages.warning(self.request, form.errors['phone'])
+        else:
+            messages.error(self.request, 'Invalid email. Please try another.')
+        return super().form_invalid(form)
