@@ -151,7 +151,7 @@ WSGI_APPLICATION = 'InterviewBot.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         # Feel free to alter this value to suit your needs.
-        default='postgres://interviewbot_user:AFSOupxzzBF5xy7UBlIHyckBXR0IgLHo@dpg-cefc2b82i3mum5uj62ig-a/interviewbot',
+        default='postgres://yxheuftbjnfgfy:3de479cc947f759f14e6ce91dd62f70d4718591421af376a57e4264e55d92a4d@ec2-52-3-60-53.compute-1.amazonaws.com:5432/dc120bmmia4jh8',
         
         conn_max_age=600
     )
