@@ -34,8 +34,8 @@ MEDIA_URL = '/media/'
 SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
-DEBUG = 'RENDER' not in os.environ
+DEBUG = False
+# DEBUG = 'RENDER' not in os.environ
 TEMPLATE_DEBUG = DEBUG
 
 
@@ -277,4 +277,4 @@ SECURE_SSL_REDIRECT=False
 SESSION_COOKIE_SECURE=False
 CSRF_COOKIE_SECURE=False
 
-#django_heroku.settings(locals())
+django_heroku.settings(locals())
